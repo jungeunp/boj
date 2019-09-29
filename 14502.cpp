@@ -1,6 +1,6 @@
 #include <iostream>
-#include <queue>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -14,6 +14,7 @@ int matrix[8][8];
 int copy_matrix[8][8]; // 바이러스 퍼트리기 위한 copy
 
 vector <Point> candidates; // 벽 후보 위치
+vector <int> visited; // 벽 후보 중 3개를 뽑기 위한 visited 배열
 vector <Point> v(3); // 벽 후보(3개 조합)
 
 queue <Point> virus; // 바이러스 위치
@@ -60,24 +61,25 @@ void diffuse(){ // 바이러스를 퍼트리는 함수
 		result = count; // max 함수 안쓰고 직접 비교함, 써도 됨
 }
 
-
-void combination(int num, int start, vector <int> &visited){
-	if(num == 3){
+void combination(int num, int start){ // 중복을 제거하기 위해서 start 지정
+	if(num == 3){ // 벽 3개가 다 세워졌을 때 바이러스 퍼트리는 함수 호출
 		diffuse();
 	}
 	else{
-		for(int i=start; i<can_num; i++){
+		for(int i=start; i<can_num; i++){ 
 			if(!visited[i]){
 				visited[i] = 1;
-				v[num] = candidates[i];
-				combination(num+1, i+1, visited);
+				v[num] = candidates[i]; // 벡터 day인덱스에 좌표 갱신
+				combination(num+1, i+1); // 다음 후보는 나보다 큰 좌표에서만 - 중복 제거
 				visited[i] = 0;
 			}
 		}
 	}
 }
+
 int main() {
 	scanf("%d %d", &n, &m);
+	
 	for(int i=0; i<n; i++){
 		for(int j=0; j<m; j++){
 			scanf("%d", &matrix[i][j]);
@@ -90,9 +92,9 @@ int main() {
 			}
 		}
 	}
+	visited.resize(can_num, 0); // visited 벡터 resize
 	
-	vector <int> visited(can_num, 0); // 벽 후보 중 3개를 뽑기 위한 visited 배열
-	combination(0, 0, visited);
+	combination(0, 0); // num = 0, start = 0으로 호출
 	
 	printf("%d", result);
 	
