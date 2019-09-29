@@ -3,10 +3,10 @@
 
 using namespace std;
 
-// 인덱스 1-base -> 1000+1로 선언
-int t[1001];
-int p[1001];
-int dp[1001];
+// 인덱스 1-base -> 15+1로 선언
+int t[16];
+int p[16];
+int dp[16];
 
 int main() {
 	int n;
